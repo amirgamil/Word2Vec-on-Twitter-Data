@@ -10,6 +10,9 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from mpl_toolkits.mplot3d import Axes3D
 
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+
 #Loading & Processing Data
 fname = get_tmpfile("vectors.kv")
 def read_twitter_data():
@@ -19,6 +22,12 @@ def read_twitter_data():
 			jsonTweet = json.loads(tweet)
 			if jsonTweet["lang"] == "en":
 				text = jsonTweet["text"]
+				#cleaning up text by removing punctuation and stop words
+				tokens = word_tokenize(text)
+				words = [word for word in tokens if word.isalpha()]
+				stop_words = set(stopwords.words('english'))
+				words = [w for w in words if not w in stop_words]
+				cleaned_text = " ".join(words)
 				all_twitter_data.append(text.lower())
 	return all_twitter_data
 
@@ -50,12 +59,13 @@ def load_model(fname):
 	model = gensim.models.Word2Vec.load("vectorOfTweets.model")
 	word_vectors = KeyedVectors.load(fname, mmap='r')
 	return (model, word_vectors)
-
-twitter_data = read_twitter_data()
-word, input_data = process_data(twitter_data)
-all_words = nltk.FreqDist(word)
-print(all_words)
-create_model(input_data)
+#Read and process twitter data
+# twitter_data = read_twitter_data()
+# word, input_data = process_data(twitter_data)
+# all_words = nltk.FreqDist(word)
+# all_words.plot(10)
+#Create the word2vec model from the data
+# create_model(input_data)
 model, word_vectors = load_model(fname)
 #print(model.wv.most_similar("meningitis", topn=100))
 keys=[]
@@ -91,8 +101,8 @@ def tsne_plot_2d(label, embeddings, words=[], a=1):
     plt.grid(True)
     plt.savefig("2D Representation.png")
 
-#tsne_plot_2d('Word Bank from Tweets Related to Meningitis', vectors_in_2d, keys, a=0.1)
-tsne_plot_2d('30 Most Similar Words to Meningitis', vectors_in_2d_similar_words, keys_similar_words, a=0.1)
+tsne_plot_2d('Word Bank from Tweets Related to Meningitis', vectors_in_2d, keys, a=0.1)
+#tsne_plot_2d('30 Most Similar Words to Meningitis', vectors_in_2d_similar_words, keys_similar_words, a=0.1)
 
 def tsne_plot_3d(title, label, embeddings, a=1):
     fig = plt.figure()
