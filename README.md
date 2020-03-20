@@ -13,4 +13,7 @@ I wasn't able to attach the JSON file containing all of the twitter data I scrap
 
 One potential room for improvement is to do some more filtering before I pass the text into the model e.g. removing all punctuation, prepositions etc. I do this but not as thoroughly as I could be doing it.
 
+Just for reference, these are the graphs I got from the twitter data I used.
 ![](2D%20Representation%20Most%20Similar%20Words.png)
+![](2D%20Representation%20Word%20Bank.png)
+![](https://github.com/amirgamil/Word2Vec-on-Twitter-Data/blob/master/3D%20Representation.png)
